@@ -6,7 +6,9 @@ import { unstable_noStore } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
-const redis = new Redis(process.env.KV_URL_TLS!);
+const redis = new Redis(process.env.KV_URL_TLS!, {
+  lazyConnect: true,
+});
 
 async function VercelPostgres() {
   const data = createData();
