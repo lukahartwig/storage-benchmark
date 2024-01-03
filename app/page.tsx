@@ -59,7 +59,7 @@ async function Ioredis() {
 
   return (
     <div>
-      <h2>ioredis</h2>
+      <h2>Vercel KV + ioredis</h2>
       <pre>
         <code>
           HSET {name} version {version} value {value}
