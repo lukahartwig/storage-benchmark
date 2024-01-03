@@ -2,11 +2,9 @@ import { createData } from "@/lib/data";
 import { Redis } from "ioredis";
 import { unstable_noStore } from "next/cache";
 
-export const dynamic = "force-dynamic";
-
 const redis = new Redis(process.env.KV_URL_TLS!);
 
-export default async function VercelPostgresPage() {
+export async function Ioredis() {
   unstable_noStore();
   const data = createData();
   const t0 = performance.now();
@@ -18,6 +16,7 @@ export default async function VercelPostgresPage() {
 
   return (
     <div>
+      <h2>ioredis</h2>
       <pre>
         <code>
           HSET {name} version {version} value {value}

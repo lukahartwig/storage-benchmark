@@ -2,9 +2,7 @@ import { createData } from "@/lib/data";
 import { sql } from "@vercel/postgres";
 import { unstable_noStore } from "next/cache";
 
-export const dynamic = "force-dynamic";
-
-export default async function VercelPostgresPage() {
+export async function VercelPostgres() {
   unstable_noStore();
   const data = createData();
   const t0 = performance.now();
@@ -14,6 +12,7 @@ export default async function VercelPostgresPage() {
 
   return (
     <div>
+      <h2>Vercel Postgres</h2>
       <pre>
         <code>INSERT INTO packages VALUES (?, ?, ?, ?, ?, ?)</code>
       </pre>

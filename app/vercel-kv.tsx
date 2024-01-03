@@ -2,9 +2,7 @@ import { createData } from "@/lib/data";
 import { kv } from "@vercel/kv";
 import { unstable_noStore } from "next/cache";
 
-export const dynamic = "force-dynamic";
-
-export default async function VercelPostgresPage() {
+export async function VercelKv() {
   unstable_noStore();
   const data = createData();
   const t0 = performance.now();
@@ -16,6 +14,7 @@ export default async function VercelPostgresPage() {
 
   return (
     <div>
+      <h2>Vercel KV</h2>
       <pre>
         <code>
           HSET {name} version {version} value {value}

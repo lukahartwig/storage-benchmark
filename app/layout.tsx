@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,22 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <header>
-          <nav>
-            <ul style={{ display: "flex", gap: "32px", listStyle: "none" }}>
-              <li>
-                <Link href="vercel-postgres">Vercel Postgres</Link>
-              </li>
-              <li>
-                <Link href="vercel-kv">Vercel KV</Link>
-              </li>
-              <li>
-                <Link href="ioredis">Vercel KV + ioredis</Link>
-              </li>
-            </ul>
-          </nav>
-        </header>
-        <main style={{ marginTop: "16px" }}>{children}</main>
+        <main>{children}</main>
       </body>
     </html>
   );
