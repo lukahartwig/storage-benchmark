@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@neondatabase/serverless':
+    specifier: ^0.6.1
+    version: 0.6.1
   '@vercel/kv':
     specifier: ^1.0.1
     version: 1.0.1
@@ -49,6 +52,12 @@ packages:
 
   /@neondatabase/serverless@0.6.0:
     resolution: {integrity: sha512-qXxBRYN0m2v8kVQBfMxbzNGn2xFAhTXFibzQlE++NfJ56Shz3m7+MyBBtXDlEH+3Wfa6lToDXf1MElocY4sJ3w==}
+    dependencies:
+      '@types/pg': 8.6.6
+    dev: false
+
+  /@neondatabase/serverless@0.6.1:
+    resolution: {integrity: sha512-rZIyWf27WxH4eW0ZRDQT2PxUJH3AphNVEnO4x1AGjBW6XrguH3ChLokup0gNGrX8cxDbP0UyduI7qdy4OLos+A==}
     dependencies:
       '@types/pg': 8.6.6
     dev: false

@@ -1,4 +1,5 @@
-import { createClient } from "@vercel/postgres";
+import { sql } from "@vercel/postgres";
+import { neonConfig } from "@neondatabase/serverless";
 import { kv } from "@vercel/kv";
 import { Redis } from "ioredis";
 import { createData } from "@/lib/data";
@@ -6,21 +7,16 @@ import { unstable_noStore } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
-const client = createClient({
-  // @ts-expect-error
-  fetchConnectionCache: true,
-});
-const connecting = client.connect();
-
 const redis = new Redis(process.env.KV_URL_TLS!, {
   lazyConnect: true,
 });
 
+neonConfig.fetchConnectionCache = true;
+
 async function VercelPostgres() {
-  await connecting;
   const data = createData();
   const t0 = performance.now();
-  await client.sql`INSERT INTO packages VALUES (${data.name}, ${data.version}, ${data.publishSize}, ${data.installSize}, ${data.publishFiles}, ${data.installFiles})`;
+  await sql`INSERT INTO packages VALUES (${data.name}, ${data.version}, ${data.publishSize}, ${data.installSize}, ${data.publishFiles}, ${data.installFiles})`;
   const t1 = performance.now();
   const delta = t1 - t0;
 
