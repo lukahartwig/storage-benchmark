@@ -1,28 +1,17 @@
 import { sql } from "@vercel/postgres";
-import { neonConfig } from "@neondatabase/serverless";
 import { kv } from "@vercel/kv";
 import { Redis } from "ioredis";
 import postgres from "postgres";
-import { createData } from "@/lib/data";
-import { unstable_noStore } from "next/cache";
+import { revalidatePath, unstable_noStore } from "next/cache";
 
 export const dynamic = "force-dynamic";
 
 const pg = postgres(process.env.POSTGRES_URL! + "?sslmode=require");
-const redis = new Redis(process.env.KV_URL_TLS!, {
-  lazyConnect: true,
-});
-
-neonConfig.fetchConnectionCache = true;
+const redis = new Redis(process.env.KV_URL_TLS!);
 
 async function VercelPostgres() {
-  const data = createData();
   const t0 = performance.now();
-  await sql`INSERT INTO packages VALUES (${data.name + "-vp"}, ${
-    data.version
-  }, ${data.publishSize}, ${data.installSize}, ${data.publishFiles}, ${
-    data.installFiles
-  })`;
+  await sql`SELECT 1`;
   const t1 = performance.now();
   const delta = t1 - t0;
 
@@ -30,7 +19,7 @@ async function VercelPostgres() {
     <div>
       <h2>@vercel/postgres</h2>
       <pre>
-        <code>INSERT INTO packages VALUES (?, ?, ?, ?, ?, ?)</code>
+        <code>SELECT 1;</code>
       </pre>
       <p>Took {delta}ms</p>
     </div>
@@ -38,13 +27,8 @@ async function VercelPostgres() {
 }
 
 async function Postgres() {
-  const data = createData();
   const t0 = performance.now();
-  await pg`INSERT INTO packages VALUES (${data.name + "-pg"}, ${
-    data.version
-  }, ${data.publishSize}, ${data.installSize}, ${data.publishFiles}, ${
-    data.installFiles
-  })`;
+  await pg`SELECT 1`;
   const t1 = performance.now();
   const delta = t1 - t0;
 
@@ -52,7 +36,7 @@ async function Postgres() {
     <div>
       <h2>postgres</h2>
       <pre>
-        <code>INSERT INTO packages VALUES (?, ?, ?, ?, ?, ?)</code>
+        <code>SELECT 1;</code>
       </pre>
       <p>Took {delta}ms</p>
     </div>
@@ -60,11 +44,8 @@ async function Postgres() {
 }
 
 async function VercelKv() {
-  const data = createData();
   const t0 = performance.now();
-  const { name, version, ...payload } = data;
-  const value = JSON.stringify(payload);
-  await kv.hset(name, { version, value });
+  await kv.ping();
   const t1 = performance.now();
   const delta = t1 - t0;
 
@@ -72,9 +53,7 @@ async function VercelKv() {
     <div>
       <h2>@vercel/kv</h2>
       <pre>
-        <code>
-          HSET {name} version {version} value {value}
-        </code>
+        <code>PING</code>
       </pre>
       <p>Took {delta}ms</p>
     </div>
@@ -82,11 +61,8 @@ async function VercelKv() {
 }
 
 async function Ioredis() {
-  const data = createData();
   const t0 = performance.now();
-  const { name, version, ...payload } = data;
-  const value = JSON.stringify(payload);
-  await redis.hset(name, version, value);
+  await redis.ping();
   const t1 = performance.now();
   const delta = t1 - t0;
 
@@ -94,9 +70,7 @@ async function Ioredis() {
     <div>
       <h2>ioredis</h2>
       <pre>
-        <code>
-          HSET {name} version {version} value {value}
-        </code>
+        <code>PING</code>
       </pre>
       <p>Took {delta}ms</p>
     </div>
@@ -111,6 +85,16 @@ export default function Home() {
       <Postgres />
       <VercelKv />
       <Ioredis />
+      <form>
+        <button
+          formAction={async () => {
+            "use server";
+            revalidatePath("/");
+          }}
+        >
+          Invalidate
+        </button>
+      </form>
     </div>
   );
 }
