@@ -28,7 +28,7 @@ async function VercelPostgres() {
 
   return (
     <div>
-      <h2>Vercel Postgres</h2>
+      <h2>@vercel/postgres</h2>
       <pre>
         <code>INSERT INTO packages VALUES (?, ?, ?, ?, ?, ?)</code>
       </pre>
@@ -70,7 +70,7 @@ async function VercelKv() {
 
   return (
     <div>
-      <h2>Vercel KV</h2>
+      <h2>@vercel/kv</h2>
       <pre>
         <code>
           HSET {name} version {version} value {value}
@@ -92,7 +92,7 @@ async function Ioredis() {
 
   return (
     <div>
-      <h2>Vercel KV + ioredis</h2>
+      <h2>ioredis</h2>
       <pre>
         <code>
           HSET {name} version {version} value {value}
